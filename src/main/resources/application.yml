@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop  #will turn on/off the hibernate auto-creation of the tables from the entity objects. none/create-drop
+      show-sql: true
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/diary'  #URL of the Postgres DB.
+    username: ikanatli
+    password: ikanatli
+    initialize: true #will mark the initialization to be true/false.
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

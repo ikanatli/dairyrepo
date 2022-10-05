@@ -1,0 +1,5 @@
+1) When applying Swagger, SpringFox, Docket Configuration
+    Problem: Cannot invoke "org.springframework.web.servlet.mvc.condition.PatternsRequestCondition.getPatterns()" because "this.condition" is null
+    Solved: add following in your application.yml or application.properties: spring.mvc.pathmatch.matching-strategy=ant_path_matcher
+
+ 2)
