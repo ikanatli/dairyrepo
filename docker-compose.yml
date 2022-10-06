@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  postgresqldb:
+    image: postgres
+    container_name: postgresdb
+    volumes:
+      - data:/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=ikanatli
+      - POSTGRES_USER=ikanatli
+      - POSTGRES_DB=diary
+
+# volume: for storing the data
+volumes:
+  data: {}
