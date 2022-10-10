@@ -12,7 +12,12 @@ spring:
     username: ikanatli
     password: ikanatli
     initialize: true #will mark the initialization to be true/false.
+  banner:
+      location: classpath:banner.txt
+
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+
