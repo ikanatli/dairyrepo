@@ -2,11 +2,9 @@ package com.idk.diary.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -14,7 +12,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 
 /*
@@ -32,7 +29,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .apis(RequestHandlerSelectors.basePackage("com.idk.diary"))
                 .build()
                 .ignoredParameterTypes(Throwable.class, StackTraceElement.class)
-                //.directModelSubstitute(OffsetDateTime.class, Date.class)
+                .directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
                 .apiInfo(apiInfo());
     }
 
@@ -55,7 +52,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
-        registry.addResourceHandler("/schemas/**")
+        registry.addResourceHandler("/static/schemas/**")
                 .addResourceLocations("classpath:/static/schemas/");
     }
 
