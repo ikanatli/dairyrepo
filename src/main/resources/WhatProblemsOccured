@@ -2,4 +2,19 @@
     Problem: Cannot invoke "org.springframework.web.servlet.mvc.condition.PatternsRequestCondition.getPatterns()" because "this.condition" is null
     Solved: add following in your application.yml or application.properties: spring.mvc.pathmatch.matching-strategy=ant_path_matcher
 
- 2)
+ 2) Swagger when navigate to http://localhost:8080/swagger-ui/ get some resolver error
+    Problem:
+        Resolver error at paths./diary.get.responses.400.schema.properties.stackTrace.items.$ref
+        Could not resolve reference: Could not resolve pointer: /definitions/Error-ModelName{namespace='java.lang', name='StackTraceElement'} does not exist in document
+        Resolver error at paths./diary.get.responses.400.schema.properties.suppressed.items.$ref
+        Could not resolve reference: Could not resolve pointer: /definitions/Error-ModelName{namespace='java.lang', name='Throwable'} does not exist in document
+    Solved: Missing Error class in the classpath but stated in the controller as response. Error.java created under model.
+
+
+ 3) Swagger when navigate to http://localhost:8080/swagger-ui/ get some resolver error
+    Problem:
+        Resolver error at paths./diary/{id}.delete.responses.200.schema.$ref
+        Could not resolve reference: Could not resolve pointer: /definitions/Error-ModelName{namespace='java.lang', name='Void'} does not exist in document
+        Resolver error at paths./diary/{id}.delete.responses.204.schema.$ref
+        Could not resolve reference: Could not resolve pointer: /definitions/Error-ModelName{namespace='java.lang', name='Void'} does not exist in document
+    Solved:  NO NO NO -> Remove the line @ApiResponse(code = 204, message = "Deleted"), but it is not a solution

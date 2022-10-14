@@ -1,13 +1,12 @@
 package com.idk.diary.api.dto;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.ApiModel;
 
-import java.util.UUID;
-
-
+@ApiModel(
+        description = "Diary represents a single diary to be recorded. Can be a daily story, an idea, thoughts, my child said... kind of memories etc.",
+        value = "Delete_Diary"
+)
 public record DeleteDiaryDto(
-        UUID id
 ) {
 
 }

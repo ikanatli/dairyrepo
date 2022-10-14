@@ -1,13 +1,16 @@
 package com.idk.diary.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.UUID;
 
+@ApiModel(
+        description = "Main domain entity"
+)
 @Entity
 @Table(name = "diaries")
 @Builder
