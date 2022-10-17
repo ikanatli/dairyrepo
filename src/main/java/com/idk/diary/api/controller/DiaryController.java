@@ -47,6 +47,7 @@ public class DiaryController implements DiaryApi {
 
         // TODO: remove dummy things...
         Diary dummyDiary = new Diary();
+        dummyDiary.setName("Dummy Day günlüğü.");
         dummyDiary.setId(new DiaryId(new UUID(123L, 456L)));
         List<Diary> dummyResult = List.of(dummyDiary);
 

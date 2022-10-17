@@ -1,9 +1,10 @@
-package com.idk.diary.model;
+package com.idk.diary.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import lombok.Builder;
 import lombok.Data;
 
 
@@ -12,21 +13,25 @@ import lombok.Data;
 )
 @Data
 @JsonInclude(Include.NON_NULL)
-public class Error {
+@Builder
+public class ErrorDto {
     @JsonProperty("code")
-    private String code = null;
+    private int code;
+
+    @JsonProperty("title")
+    private String title;
 
     @JsonProperty("reason")
-    private String reason = null;
+    private String reason;
 
     @JsonProperty("message")
-    private String message = null;
+    private String message;
 
     @JsonProperty("status")
-    private String status = null;
+    private String status;
 
     @JsonProperty("referenceError")
-    private String referenceError = null;
+    private String referenceError;
 
 
 }

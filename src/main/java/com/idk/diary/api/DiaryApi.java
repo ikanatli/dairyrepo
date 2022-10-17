@@ -1,7 +1,7 @@
 package com.idk.diary.api;
 
 import com.idk.diary.api.dto.CreateDiaryDto;
-import com.idk.diary.model.Error;
+import com.idk.diary.api.dto.ErrorDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.model.Diary;
 import io.swagger.annotations.*;
@@ -25,12 +25,12 @@ public interface DiaryApi {
     @ApiResponses(
             value = {
                     @ApiResponse(code = 201, message = "Created", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)
+                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
+                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
+                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
+                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
+                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
             }
     )
     @PostMapping(path = "/diary",
@@ -54,13 +54,13 @@ public interface DiaryApi {
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)
+                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
+                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
+                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
+                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
+                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
+                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
             }
     )
     @DeleteMapping(path = "/diary/{id}",
@@ -85,13 +85,13 @@ public interface DiaryApi {
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)
+                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
+                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
+                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
+                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
+                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
+                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
             }
     )
     @GetMapping(path = "/diary",
@@ -113,13 +113,13 @@ public interface DiaryApi {
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)
+                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
+                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
+                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
+                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
+                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
+                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
             }
     )
     @GetMapping(path = "/diary/{id}",
@@ -146,13 +146,13 @@ public interface DiaryApi {
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)
+                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
+                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
+                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
+                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
+                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
+                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
             }
     )
     @PatchMapping(path = "/diary/{id}",
