@@ -3,7 +3,7 @@ package com.idk.diary.api;
 import com.idk.diary.api.dto.CreateDiaryDto;
 import com.idk.diary.api.dto.ErrorDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
-import com.idk.diary.model.Diary;
+import com.idk.diary.domain.model.Diary;
 import io.swagger.annotations.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +44,6 @@ public interface DiaryApi {
     );
 
 
-
-
     @ApiOperation(
             value = "Deletes a Diary",
             nickname = "deleteDiary",
@@ -73,7 +71,6 @@ public interface DiaryApi {
     );
 
 
-
     @ApiOperation(
             value = "Retrieve the List of Diaries",
             nickname = "listDiary",
@@ -98,9 +95,6 @@ public interface DiaryApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<List<Diary>> retrieve();
-
-
-
 
 
     @ApiOperation(
@@ -130,10 +124,6 @@ public interface DiaryApi {
             @PathVariable("id")
                     UUID id
     );
-
-
-
-
 
 
     @ApiOperation(
