@@ -1,4 +1,4 @@
-package com.idk.diary.swagger;
+package com.idk.diary.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,8 @@ import java.time.OffsetDateTime;
 public class SwaggerConfig implements WebMvcConfigurer {
 
 
-
     @Bean
-    public Docket api(){
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select() // provides a way to control the endpoints exposed by Swagger.
                 .apis(RequestHandlerSelectors.basePackage("com.idk.diary"))
@@ -45,7 +44,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
@@ -55,7 +54,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/schemas/**")
                 .addResourceLocations("classpath:/static/schemas/");
     }
-
 
 
 }

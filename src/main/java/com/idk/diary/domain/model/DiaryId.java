@@ -1,4 +1,4 @@
-package com.idk.diary.model;
+package com.idk.diary.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,11 +24,11 @@ public class DiaryId implements Serializable, Comparable<DiaryId> {
 
     private UUID idValue;
 
-    public static DiaryId from(int idValue){
-        return new DiaryId(new UUID(0,idValue));
+    public static DiaryId randomUUID() {
+        return new DiaryId(UUID.randomUUID());
     }
 
-    public static DiaryId from(UUID idValue){
+    public static DiaryId from(UUID idValue) {
         return new DiaryId(idValue);
     }
 

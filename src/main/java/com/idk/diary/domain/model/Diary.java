@@ -1,4 +1,4 @@
-package com.idk.diary.model;
+package com.idk.diary.domain.model;
 
 import io.swagger.annotations.ApiModel;
 import lombok.*;
@@ -21,7 +21,7 @@ import java.time.Instant;
 public class Diary {
 
     @EmbeddedId
-    @AttributeOverride(name = "idValue", column = @Column(name  = "id"))
+    @AttributeOverride(name = "idValue", column = @Column(name = "id"))
     private DiaryId id;
 
     private String name;
