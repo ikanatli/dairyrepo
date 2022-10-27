@@ -20,7 +20,11 @@ public record GetDiaryDto(
         String name,
 
         @JsonProperty("location")
-        String location
+        String location,
+
+        @JsonProperty("text")
+        String text
+
 ) {
 
 
