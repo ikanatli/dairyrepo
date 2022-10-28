@@ -33,7 +33,7 @@ class DeleteDiaryCommandTest {
         when(diaryRepository.findById(diary.getId())).thenReturn(Optional.of(diary));
 
         // when
-        var actual = underTestObjectDeleteDiaryCommand.execute(diary);
+        var actual = underTestObjectDeleteDiaryCommand.execute(diary.getId());
 
         // then
         assertFalse(actual);
@@ -52,7 +52,7 @@ class DeleteDiaryCommandTest {
         // when
         // then
         assertThrows(DiaryNotFoundException.class,
-                () -> underTestObjectDeleteDiaryCommand.execute(diary),
+                () -> underTestObjectDeleteDiaryCommand.execute(diary.getId()),
                 DiaryNotFoundException.MESSAGE);
         verify(diaryRepository).findById(diary.getId());
         verifyNoMoreInteractions(diaryRepository);

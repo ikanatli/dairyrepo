@@ -22,8 +22,10 @@ public class RetrieveDiaryQuery implements DiaryQuery<DiaryId, Diary> {
     public Diary execute(DiaryId diaryId) {
         Diary foundDiary = diaryRepository.findById(diaryId).orElse(null);
         if (foundDiary == null) {
+            log.info("RetrieveDiaryQuery -> Could not find diary with id {}", diaryId.getIdValue());
             throw new DiaryNotFoundException(diaryId);
         }
+        log.info("RetrieveDiaryQuery -> Able to find diary with id {}", diaryId.getIdValue());
         return foundDiary;
     }
 

@@ -2,6 +2,7 @@ package com.idk.diary.api;
 
 import com.idk.diary.api.dto.CreateDiaryDto;
 import com.idk.diary.api.dto.ErrorDto;
+import com.idk.diary.api.dto.GetDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.domain.model.Diary;
 import io.swagger.annotations.*;
@@ -119,7 +120,7 @@ public interface DiaryApi {
     @GetMapping(path = "/diary/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<Diary> retrieve(
+    ResponseEntity<GetDiaryDto> retrieve(
             @ApiParam(value = "Identifier of the Diary", required = true)
             @PathVariable("id")
                     UUID id
