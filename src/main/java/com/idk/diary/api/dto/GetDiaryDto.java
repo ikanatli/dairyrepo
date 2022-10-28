@@ -23,7 +23,10 @@ public record GetDiaryDto(
         String location,
 
         @JsonProperty("text")
-        String text
+        String text,
+
+        @JsonProperty("version")
+        Integer version
 
 ) {
 

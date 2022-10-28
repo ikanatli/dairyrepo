@@ -2,7 +2,9 @@ package com.idk.diary.api.controller;
 
 import com.idk.diary.api.DiaryApi;
 import com.idk.diary.api.dto.CreateDiaryDto;
+import com.idk.diary.api.dto.GetDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
+import com.idk.diary.api.dto.converter.request.PatchDiaryDtoToDiaryConverter;
 import com.idk.diary.domain.model.Diary;
 import com.idk.diary.domain.model.DiaryId;
 import com.idk.diary.domain.services.impl.CreateDiaryCommand;
@@ -11,12 +13,13 @@ import com.idk.diary.domain.services.impl.RetrieveDiaryQuery;
 import com.idk.diary.domain.services.impl.UpdateDiaryCommand;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Log4j2 // Version2 enables async logging.
@@ -28,32 +31,32 @@ public class DiaryController implements DiaryApi {
     private final RetrieveDiaryQuery retrieveDiaryQuery;
     private final UpdateDiaryCommand updateDiaryCommand;
 
+    private final ConversionService conversionService;
+    private final PatchDiaryDtoToDiaryConverter patchDiaryDtoToDiaryConverter;
+
     @Autowired
     public DiaryController(CreateDiaryCommand createDiaryCommand,
                            DeleteDiaryCommand deleteDiaryCommand,
                            RetrieveDiaryQuery retrieveDiaryQuery,
-                           UpdateDiaryCommand updateDiaryCommand) {
+                           UpdateDiaryCommand updateDiaryCommand,
+                           ConversionService conversionService,
+                           PatchDiaryDtoToDiaryConverter patchDiaryDtoToDiaryConverter) {
         this.createDiaryCommand = createDiaryCommand;
         this.deleteDiaryCommand = deleteDiaryCommand;
         this.retrieveDiaryQuery = retrieveDiaryQuery;
         this.updateDiaryCommand = updateDiaryCommand;
+        this.conversionService = conversionService;
+        this.patchDiaryDtoToDiaryConverter = patchDiaryDtoToDiaryConverter;
     }
 
+    // TODO: add uriComponentsBuilder
     @Override
     public ResponseEntity<?> create(CreateDiaryDto createDiaryDto) {
         log.info("DiaryController -> Create diary started for {}", createDiaryDto.name());
 
-        // TODO: create DTO converter
-        Diary diary = new Diary();
-        diary.setName(createDiaryDto.name());
-        diary.setCreatedAt(Instant.now());
-        diary.setUpdatedAt(Instant.now());
-        diary.setLocation(createDiaryDto.location());
-        diary.setText(createDiaryDto.text());
-        diary.setVersion(1);
-        diary.setId(DiaryId.randomUUID());
-
-        diary = createDiaryCommand.execute(diary);
+        Diary diary = createDiaryCommand.execute(
+                Objects.requireNonNull(conversionService.convert(createDiaryDto, Diary.class))
+        );
 
         return new ResponseEntity<>(diary, HttpStatus.CREATED);
     }
@@ -61,22 +64,16 @@ public class DiaryController implements DiaryApi {
     @Override
     public ResponseEntity<Void> delete(UUID id) {
         log.info("DiaryController -> Delete diary started for {}", id);
-
-        // TODO: create DTO converter
-        Diary diary = new Diary();
-        diary.setId(DiaryId.from(id));
-
-        deleteDiaryCommand.execute(diary);
-
+        deleteDiaryCommand.execute(DiaryId.from(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public ResponseEntity<Diary> retrieve(UUID id) {
+    public ResponseEntity<GetDiaryDto> retrieve(UUID id) {
         log.info("DiaryController -> Get diary for {}", id);
-        // TODO: create DTO converter
         Diary retrievedDiary = retrieveDiaryQuery.execute(DiaryId.from(id));
-        return new ResponseEntity<>(retrievedDiary, HttpStatus.OK);
+        GetDiaryDto getDiaryDto = conversionService.convert(retrievedDiary, GetDiaryDto.class);
+        return new ResponseEntity<>(getDiaryDto, HttpStatus.OK);
     }
 
     @Override
@@ -87,21 +84,15 @@ public class DiaryController implements DiaryApi {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    // TODO: add eTag header and confirm accordingly
     @Override
     public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto) {
         log.info("DiaryController -> Patch diary started for name {} and id {}", patchDiaryDto.name(), id);
 
-        // TODO: create DTO converter
-        Diary diary = new Diary();
-        diary.setName(patchDiaryDto.name());
-        diary.setUpdatedAt(Instant.now());
-        diary.setLocation(patchDiaryDto.location());
-        diary.setText(patchDiaryDto.text());
         // diary.setVersion(patchDiaryDto.); TODO add e-tag, optimistic lock mechanism, version control
-        diary.setVersion(1);
-        diary.setId(DiaryId.from(id));
+        UpdateDiaryCommand.DiaryUpdate diaryUpdate = patchDiaryDtoToDiaryConverter.convert(id, 0, patchDiaryDto);
 
-        Diary updatedDiary = updateDiaryCommand.execute(diary);
+        Diary updatedDiary = updateDiaryCommand.execute(diaryUpdate);
         return new ResponseEntity<>(updatedDiary, HttpStatus.OK);
     }
 }

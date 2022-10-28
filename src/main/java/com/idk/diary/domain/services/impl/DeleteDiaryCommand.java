@@ -2,6 +2,7 @@ package com.idk.diary.domain.services.impl;
 
 import com.idk.diary.domain.exception.DiaryNotFoundException;
 import com.idk.diary.domain.model.Diary;
+import com.idk.diary.domain.model.DiaryId;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import com.idk.diary.domain.services.DiaryCommand;
 import lombok.RequiredArgsConstructor;
@@ -12,24 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 @Component
 @RequiredArgsConstructor
-public class DeleteDiaryCommand implements DiaryCommand<Diary, Boolean> {
+public class DeleteDiaryCommand implements DiaryCommand<DiaryId, Boolean> {
 
     private final DiaryRepository diaryRepository;
 
     @Transactional
-    @Override
-    public Boolean execute(Diary diary) {
-        Diary existingDiary = diaryRepository.findById(diary.getId()).orElse(null);
+    public Boolean execute(DiaryId diaryId) {
+        Diary existingDiary = diaryRepository.findById(diaryId).orElse(null);
         if (existingDiary == null) {
-            log.info("DeleteDiaryCommand -> Could not find diary with id {}", diary.getName());
-            throw new DiaryNotFoundException(diary.getId());
+            log.info("DeleteDiaryCommand -> Could not find diary with id {}", diaryId);
+            throw new DiaryNotFoundException(diaryId);
         }
-        return delete(diary);
+        return delete(diaryId);
     }
 
-    private boolean delete(Diary diary) {
-        log.info("DeleteDiaryCommand -> Delete diary started for {}", diary.getName());
-        long deletedCount = diaryRepository.deleteById_idValue(diary.getId().getIdValue());
+    private boolean delete(DiaryId diaryId) {
+        log.info("DeleteDiaryCommand -> Delete diary started for {}", diaryId);
+        long deletedCount = diaryRepository.deleteById_idValue(diaryId.getIdValue());
         log.info("DeleteDiaryCommand -> {} of diaries has been deleted.", deletedCount);
         return deletedCount > 0;
     }
