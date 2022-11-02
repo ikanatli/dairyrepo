@@ -73,7 +73,9 @@ public class DiaryController implements DiaryApi {
         log.info("DiaryController -> Get diary for {}", id);
         Diary retrievedDiary = retrieveDiaryQuery.execute(DiaryId.from(id));
         GetDiaryDto getDiaryDto = conversionService.convert(retrievedDiary, GetDiaryDto.class);
-        return new ResponseEntity<>(getDiaryDto, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .eTag(String.valueOf(retrievedDiary.getVersion()))
+                .body(getDiaryDto);
     }
 
     @Override
@@ -86,11 +88,11 @@ public class DiaryController implements DiaryApi {
 
     // TODO: add eTag header and confirm accordingly
     @Override
-    public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto) {
+    public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto, Integer eTag) {
         log.info("DiaryController -> Patch diary started for name {} and id {}", patchDiaryDto.name(), id);
 
         // diary.setVersion(patchDiaryDto.); TODO add e-tag, optimistic lock mechanism, version control
-        UpdateDiaryCommand.DiaryUpdate diaryUpdate = patchDiaryDtoToDiaryConverter.convert(id, 0, patchDiaryDto);
+        UpdateDiaryCommand.DiaryUpdate diaryUpdate = patchDiaryDtoToDiaryConverter.convert(id, eTag, patchDiaryDto);
 
         Diary updatedDiary = updateDiaryCommand.execute(diaryUpdate);
         return new ResponseEntity<>(updatedDiary, HttpStatus.OK);
