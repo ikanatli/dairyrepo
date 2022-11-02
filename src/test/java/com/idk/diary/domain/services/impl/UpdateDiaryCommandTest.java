@@ -90,6 +90,8 @@ class UpdateDiaryCommandTest {
         };
     }
 
+
+
     @Test
     void givenExistingDiaryId_whenUpdateDiary_thenUpdateExistingDiarySuccessfully() {
         // given
@@ -129,8 +131,10 @@ class UpdateDiaryCommandTest {
     void givenExistingDiaryIdButOutdatedVersion_whenUpdateDiary_thenThrowException() {
         // given
         // when
+        when(diaryRepository.findById(existingDiary.getId())).thenReturn(Optional.of(existingDiary));
+
         // then
-        assertThrows(DiaryNotFoundException.class,
+        assertThrows(DiaryVersionNotMatchesToExistingRecord.class,
                 () -> underTestObjectUpdateDiaryCommand.execute(diaryUpdateOutDated),
                 DiaryVersionNotMatchesToExistingRecord.MESSAGE);
         verify(diaryRepository).findById(existingDiary.getId());
