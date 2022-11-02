@@ -6,6 +6,7 @@ import com.idk.diary.api.dto.GetDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.domain.model.Diary;
 import io.swagger.annotations.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -154,9 +155,12 @@ public interface DiaryApi {
             @ApiParam(value = "Identifier of the Diary", required = true)
             @PathVariable("id")
                     UUID id,
-            @ApiParam(value = "The Diary with to be updated fields", required = true)
+            @ApiParam(value = "The Diary, to be updated fields included.", required = true)
             @RequestBody
-                    PatchDiaryDto patchDiaryDto
+                    PatchDiaryDto patchDiaryDto,
+            @ApiParam(value = "The Existing Diary record version.", required = true)
+            @RequestHeader(name = HttpHeaders.IF_MATCH)
+                    Integer ifMatch
     );
 
 }
