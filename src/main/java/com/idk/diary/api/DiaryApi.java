@@ -159,7 +159,7 @@ public interface DiaryApi {
             @RequestBody
                     PatchDiaryDto patchDiaryDto,
             @ApiParam(value = "The Existing Diary record version.", required = true)
-            @RequestHeader(name = HttpHeaders.IF_MATCH)
+            @RequestHeader(name = HttpHeaders.IF_MATCH, required = false)
                     Integer ifMatch
     );
 

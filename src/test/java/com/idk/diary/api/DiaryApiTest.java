@@ -5,7 +5,8 @@ import com.idk.diary.api.dto.CreateDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.domain.dto.CreateDiaryDtoTestDataBuilder;
 import com.idk.diary.domain.dto.PatchDiaryDtoTestDataBuilder;
-import com.idk.diary.domain.exception.DiaryVersionNotMatchesToExistingRecord;
+import com.idk.diary.domain.exception.PreConditionFailedForPatchDiary;
+import com.idk.diary.domain.exception.PreConditionHeaderRequired;
 import com.idk.diary.domain.model.Diary;
 import com.idk.diary.domain.model.DiaryId;
 import com.idk.diary.domain.model.DiaryTestBuilder;
@@ -43,31 +44,57 @@ class DiaryApiTest {
     }
 
     @Test
-    void givenExistingDiaryIdButOutdatedVersion_whenRequestedWithPatch_thenThrowException() throws Exception {
+    void givenExistingDiaryIdWithoutIfMatchHeader_whenRequestedWithPatch_thenThrowPreConditionRequiredException() throws Exception {
+        // given
+        DiaryId availableDiaryId = addNewDiaryToTheSystem();
+        Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
+        // and
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.builder()
+                .text("Update my loaded diary where version is null.")
+                .name(availableDiary.getName())
+                .location(availableDiary.getLocation())
+                .build();
+
+        // when
+        ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, null);
+
+        // then
+        resultActions.andExpectAll(
+                status().isPreconditionRequired(),
+                jsonPath("$.message", containsString(String.format(PreConditionHeaderRequired.MESSAGE, HttpHeaders.IF_MATCH)))
+        );
+
+    }
+
+
+
+    @Test
+    void givenExistingDiaryIdButOutdatedVersion_whenRequestedWithPatch_thenThrowPreConditionFailedException() throws Exception {
         // given
         DiaryId availableDiaryId = addNewDiaryToTheSystem();
         Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
 
         // and
-        Diary loadedDiary = diaryRepository.findById(availableDiaryId).get();
+        ResultActions dairyGetResponse = sendGetDiaryCommandFor(availableDiaryId);
+        String eTag = dairyGetResponse.andReturn().getResponse().getHeader(HttpHeaders.ETAG);
 
         // and
         diaryWasModifiedInTheMeanTime(availableDiary);
 
         // and
         PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.builder()
-                .text("Update my loaded diary where version is 0.")
+                .text("Update my loaded diary where version is " + eTag)
                 .name(availableDiary.getName())
                 .location(availableDiary.getLocation())
                 .build();
 
         // when
-        ResultActions resultActions = sendPatchDiaryCommandFor(loadedDiary.getId(), patchDiaryDtoOnLoadedDiary, loadedDiary.getVersion());
+        ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, availableDiary.getVersion());
 
         // then
         resultActions.andExpectAll(
-                status().isConflict(),
-                jsonPath("$.message", containsString(DiaryVersionNotMatchesToExistingRecord.MESSAGE))
+                status().isPreconditionFailed(),
+                jsonPath("$.message", containsString(PreConditionFailedForPatchDiary.MESSAGE))
         );
 
     }
@@ -164,7 +191,7 @@ class DiaryApiTest {
                         patch("/diary/{id}/", id.getIdValue())
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                                .header(HttpHeaders.IF_MATCH, resourceVersion)
+                                .header((resourceVersion != null ? HttpHeaders.IF_MATCH : "dummy"), (resourceVersion != null ? resourceVersion : "dummy"))
                                 .content(payload)
                 );
     }

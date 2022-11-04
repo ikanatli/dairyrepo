@@ -5,6 +5,8 @@ import com.idk.diary.api.dto.CreateDiaryDto;
 import com.idk.diary.api.dto.GetDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.api.dto.converter.request.PatchDiaryDtoToDiaryConverter;
+import com.idk.diary.domain.exception.PreConditionFailedForPatchDiary;
+import com.idk.diary.domain.exception.PreConditionHeaderRequired;
 import com.idk.diary.domain.model.Diary;
 import com.idk.diary.domain.model.DiaryId;
 import com.idk.diary.domain.services.impl.CreateDiaryCommand;
@@ -14,6 +16,7 @@ import com.idk.diary.domain.services.impl.UpdateDiaryCommand;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,13 +89,19 @@ public class DiaryController implements DiaryApi {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    // TODO: add eTag header and confirm accordingly
-    @Override
-    public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto, Integer eTag) {
-        log.info("DiaryController -> Patch diary started for name {} and id {}", patchDiaryDto.name(), id);
 
-        // diary.setVersion(patchDiaryDto.); TODO add e-tag, optimistic lock mechanism, version control
-        UpdateDiaryCommand.DiaryUpdate diaryUpdate = patchDiaryDtoToDiaryConverter.convert(id, eTag, patchDiaryDto);
+    @Override
+    public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto, Integer ifMatch) {
+        log.info("DiaryController -> Patch diary started for name {} and id {}", patchDiaryDto.name(), id);
+        Diary retrievedDiary = retrieveDiaryQuery.execute(DiaryId.from(id));
+        if(ifMatch == null){
+            throw new PreConditionHeaderRequired(HttpHeaders.IF_MATCH);
+        }
+        if(!retrievedDiary.getVersion().equals(ifMatch)){
+            throw new PreConditionFailedForPatchDiary(retrievedDiary, ifMatch);
+        }
+
+        UpdateDiaryCommand.DiaryUpdate diaryUpdate = patchDiaryDtoToDiaryConverter.convert(id, ifMatch, patchDiaryDto);
 
         Diary updatedDiary = updateDiaryCommand.execute(diaryUpdate);
         return new ResponseEntity<>(updatedDiary, HttpStatus.OK);

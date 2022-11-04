@@ -2,9 +2,7 @@ package com.idk.diary.api.exception;
 
 import com.idk.diary.api.controller.DiaryController;
 import com.idk.diary.api.dto.ErrorDto;
-import com.idk.diary.domain.exception.DiaryAlreadyExistsException;
-import com.idk.diary.domain.exception.DiaryNotFoundException;
-import com.idk.diary.domain.exception.DiaryVersionNotMatchesToExistingRecord;
+import com.idk.diary.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -23,6 +21,30 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice(assignableTypes = {DiaryController.class})
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(PreConditionHeaderRequired.class)
+    @ResponseStatus(value = HttpStatus.PRECONDITION_REQUIRED)
+    ErrorDto handleException(PreConditionHeaderRequired exception, HttpServletRequest request) {
+        return ErrorDto.builder().
+                code(HttpStatus.PRECONDITION_REQUIRED.value()).
+                title(HttpStatus.PRECONDITION_REQUIRED.name()).
+                referenceError(request.getRequestURI()).
+                reason(exception.toString()).
+                message(exception.getMessage()).
+                build();
+    }
+
+    @ExceptionHandler(PreConditionFailedForPatchDiary.class)
+    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED)
+    ErrorDto handleException(PreConditionFailedForPatchDiary exception, HttpServletRequest request) {
+        return ErrorDto.builder().
+                code(HttpStatus.PRECONDITION_FAILED.value()).
+                title(HttpStatus.PRECONDITION_FAILED.name()).
+                referenceError(request.getRequestURI()).
+                reason(exception.toString()).
+                message(exception.getMessage()).
+                build();
+    }
 
     @ExceptionHandler(DiaryVersionNotMatchesToExistingRecord.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
