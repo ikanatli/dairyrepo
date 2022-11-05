@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,7 +43,8 @@ public interface DiaryApi {
     ResponseEntity<?> create(
             @ApiParam(value = "The Diary to be created", required = true)
             @RequestBody
-                    CreateDiaryDto createDiaryDto
+                    CreateDiaryDto createDiaryDto,
+            UriComponentsBuilder uriComponentsBuilder
     );
 
 
