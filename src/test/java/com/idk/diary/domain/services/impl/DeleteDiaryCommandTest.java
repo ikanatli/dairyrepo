@@ -2,7 +2,7 @@ package com.idk.diary.domain.services.impl;
 
 import com.idk.diary.domain.exception.DiaryNotFoundException;
 import com.idk.diary.domain.model.Diary;
-import com.idk.diary.domain.model.DiaryTestBuilder;
+import com.idk.diary.domain.model.DiaryTestDataBuilder;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class DeleteDiaryCommandTest {
     void givenExistingDiaryId_whenDeleteDiary_thenDeleteDiarySuccessfully() {
         // given
         var name = "01.01.2022";
-        Diary diary = new DiaryTestBuilder().withTestDefaults().name(name).build();
+        Diary diary = new DiaryTestDataBuilder().withTestDefaults().name(name).build();
         when(diaryRepository.findById(diary.getId())).thenReturn(Optional.of(diary));
 
         // when
@@ -46,7 +46,7 @@ class DeleteDiaryCommandTest {
     void givenNonExistingDiaryId_whenDeleteDiary_thenThrowException() {
         // given
         var name = "01.01.2022";
-        Diary diary = new DiaryTestBuilder().withTestDefaults().name(name).build();
+        Diary diary = new DiaryTestDataBuilder().withTestDefaults().name(name).build();
         when(diaryRepository.findById(diary.getId())).thenReturn(Optional.empty());
 
         // when

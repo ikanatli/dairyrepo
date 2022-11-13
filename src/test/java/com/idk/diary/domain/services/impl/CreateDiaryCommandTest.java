@@ -1,7 +1,7 @@
 package com.idk.diary.domain.services.impl;
 
 import com.idk.diary.domain.model.Diary;
-import com.idk.diary.domain.model.DiaryTestBuilder;
+import com.idk.diary.domain.model.DiaryTestDataBuilder;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class CreateDiaryCommandTest {
     void givenDefaultDiary_whenCreateDiary_thenCreateNewDiarySuccessfully() {
         // given
         var name = "01.01.2022";
-        Diary diary = new DiaryTestBuilder().withTestDefaults().name(name).build();
+        Diary diary = new DiaryTestDataBuilder().withTestDefaults().name(name).build();
         when(diaryRepository.save(diary)).thenReturn(diary);
 
         // when

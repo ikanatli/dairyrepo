@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -24,8 +26,12 @@ public class Diary {
     @AttributeOverride(name = "idValue", column = @Column(name = "id"))
     private DiaryId id;
 
+    @NotBlank(message = "Name must not be empty.")
+    @Length(min = 4, max = 40, message = "Name length must not be at least 4 and at most 40 characters.")
     private String name;
+
     private String text;
+
     private String location;
 
     @Generated(value = GenerationTime.INSERT)
