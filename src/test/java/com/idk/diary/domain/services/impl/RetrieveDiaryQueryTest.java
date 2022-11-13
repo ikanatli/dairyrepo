@@ -2,7 +2,7 @@ package com.idk.diary.domain.services.impl;
 
 import com.idk.diary.domain.exception.DiaryNotFoundException;
 import com.idk.diary.domain.model.Diary;
-import com.idk.diary.domain.model.DiaryTestBuilder;
+import com.idk.diary.domain.model.DiaryTestDataBuilder;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ class RetrieveDiaryQueryTest {
     @Test
     void givenExistingDiaryId_whenRetrieveDiary_thenRetrieveExistingDiarySuccessfully() {
         // given
-        Diary existingDiary = new DiaryTestBuilder().withTestDefaults().build();
+        Diary existingDiary = new DiaryTestDataBuilder().withTestDefaults().build();
         when(diaryRepository.findById(existingDiary.getId())).thenReturn(Optional.of(existingDiary));
 
         // when
@@ -45,7 +45,7 @@ class RetrieveDiaryQueryTest {
     @Test
     void givenNonExistingDiaryId_whenRetrieveDiary_thenThrowException() {
         // given
-        Diary existingDiary = new DiaryTestBuilder().withTestDefaults().build();
+        Diary existingDiary = new DiaryTestDataBuilder().withTestDefaults().build();
         when(diaryRepository.findById(existingDiary.getId())).thenReturn(Optional.empty());
 
         // when

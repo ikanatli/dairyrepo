@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 
 @RequiredArgsConstructor
-public
-class DiaryTestBuilder extends Diary.DiaryBuilder {
+public class DiaryTestDataBuilder extends Diary.DiaryBuilder {
 
     public Diary.DiaryBuilder withTestDefaults() {
         return Diary.builder()

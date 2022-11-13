@@ -5,13 +5,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     hibernate:
-      ddl-auto: create-drop  #will turn on/off hibernate auto-creation of the tables from the entity objects. none/create-drop
+      ddl-auto: validate  #will turn on/off hibernate auto-creation of the tables from the entity objects. none/create-drop
+    show-sql: true
   datasource:
     url: 'jdbc:postgresql://localhost:5432/diary'  #URL of the Postgres DB.
     username: ikanatli
     password: ikanatli
   banner:
     location: classpath:banner.txt
+  test:
+    database:
+      replace: none # Use postgresql instead of H2 in-mem DB.
 
 
   mvc:

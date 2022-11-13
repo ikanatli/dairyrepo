@@ -4,7 +4,7 @@ import com.idk.diary.domain.exception.DiaryNotFoundException;
 import com.idk.diary.domain.exception.DiaryVersionNotMatchesToExistingRecord;
 import com.idk.diary.domain.model.Diary;
 import com.idk.diary.domain.model.DiaryId;
-import com.idk.diary.domain.model.DiaryTestBuilder;
+import com.idk.diary.domain.model.DiaryTestDataBuilder;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class UpdateDiaryCommandTest {
 
     @BeforeEach
     void setup(){
-        existingDiary = new DiaryTestBuilder().withTestDefaults().build();
+        existingDiary = new DiaryTestDataBuilder().withTestDefaults().build();
         diaryUpdate = new UpdateDiaryCommand.DiaryUpdate() {
             @Override
             public DiaryId getDiaryId() {

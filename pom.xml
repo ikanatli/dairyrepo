@@ -18,6 +18,7 @@
 		<java.version>17</java.version>
 		<springfox-version>3.0.0</springfox-version>
 		<testcontainers.version>1.17.4</testcontainers.version>
+		<hibernate.validator.version>5.3.6.Final</hibernate.validator.version>
 	</properties>
 
 	<dependencies>
@@ -75,6 +76,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
+
+		<!-- VALIDATING entities-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate.validator.version}</version>
+		</dependency>
+
 
 	</dependencies>
 	<dependencyManagement>
