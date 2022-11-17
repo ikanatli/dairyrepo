@@ -10,16 +10,18 @@ public class PatchDiaryDtoTestDataBuilder {
     private PatchDiaryDtoTestDataBuilder() {
     }
 
-    @Builder
-    private static PatchDiaryDto build(
-            String name,
-            String text,
-            String location
-    ) {
+    @Builder(buildMethodName = "buildEmpty", builderMethodName = "anEmptyPatchDiaryDto", setterPrefix = "with")
+    private static PatchDiaryDto buildEmptyPatchDiaryDto(String name, String text, String location) {
+        return new PatchDiaryDto(name, text, location);
+    }
+
+
+    @Builder(buildMethodName = "buildDefault",builderMethodName = "aDefaultPatchDiaryDto", setterPrefix = "with")
+    private static PatchDiaryDto buildDefaultPatchDiaryDto(String name, String text, String location) {
         return new PatchDiaryDto(
-                name.isEmpty() ? "John" : name,
-                text.isEmpty() ? "John is busy now!" : text,
-                location.isEmpty() ? "USA" : location
+                name == null ? "John" : name,
+                text == null ? "John is busy now!" : text,
+                location == null ? "USA" : location
         );
     }
 

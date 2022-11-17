@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ public interface DiaryApi {
     ResponseEntity<?> create(
             @ApiParam(value = "The Diary to be created", required = true)
             @RequestBody
+            @Valid
                     CreateDiaryDto createDiaryDto,
             UriComponentsBuilder uriComponentsBuilder
     );
@@ -158,6 +160,7 @@ public interface DiaryApi {
             @PathVariable("id")
                     UUID id,
             @ApiParam(value = "The Diary, to be updated fields included.", required = true)
+            @Valid
             @RequestBody
                     PatchDiaryDto patchDiaryDto,
             @ApiParam(value = "The Existing Diary record version.", required = true)

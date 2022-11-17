@@ -17,6 +17,7 @@ public record GetDiaryDto(
         @JsonProperty("id")
         UUID id,
 
+        @ApiModelProperty(value = "Explanatory name of the diary")
         @JsonProperty("name")
         String name,
 
