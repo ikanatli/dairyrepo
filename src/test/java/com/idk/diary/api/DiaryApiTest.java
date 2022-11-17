@@ -9,7 +9,7 @@ import com.idk.diary.domain.exception.PreConditionFailedForPatchDiary;
 import com.idk.diary.domain.exception.PreConditionHeaderRequired;
 import com.idk.diary.domain.model.Diary;
 import com.idk.diary.domain.model.DiaryId;
-import com.idk.diary.domain.model.DiaryTestBuilder;
+import com.idk.diary.domain.model.DiaryTestDataBuilder;
 import com.idk.diary.domain.persistence.DiaryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -44,16 +44,84 @@ class DiaryApiTest {
     }
 
     @Test
+    void givenExistingDiaryIdWithCorrectPayload_whenRequestedWithPatch_thenUpdateDiarySuccessfully() throws Exception {
+        // given
+        DiaryId availableDiaryId = addNewDiaryToTheSystem();
+        Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
+        // and
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.aDefaultPatchDiaryDto()
+                .buildDefault();
+
+        // when
+        ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, availableDiary.getVersion());
+
+        // then
+        resultActions.andExpectAll(
+                status().isOk(),
+                jsonPath("$.name", is(patchDiaryDtoOnLoadedDiary.name())),
+                jsonPath("$.text", is(patchDiaryDtoOnLoadedDiary.text())),
+                jsonPath("$.location", is(patchDiaryDtoOnLoadedDiary.location())),
+                jsonPath("$.version", not(availableDiary.getVersion()))
+        );
+
+    }
+
+    @Test
+    void givenExistingDiaryIdWithNullName_whenRequestedWithPatch_thenThrowException() throws Exception {
+        // given
+        DiaryId availableDiaryId = addNewDiaryToTheSystem();
+        Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
+        // and
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.anEmptyPatchDiaryDto()
+                .withText("Update my loaded diary where version is null.")
+                .withLocation(availableDiary.getLocation())
+                .buildEmpty();
+
+        // when
+        ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, availableDiary.getVersion());
+
+        // then
+        resultActions.andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.message", containsString("Name must not be empty."))
+        );
+
+    }
+
+    @Test
+    void givenExistingDiaryIdWitEmptyName_whenRequestedWithPatch_thenThrowException() throws Exception {
+        // given
+        DiaryId availableDiaryId = addNewDiaryToTheSystem();
+        Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
+        // and
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.anEmptyPatchDiaryDto()
+                .withName("")
+                .withText("Update my loaded diary where version is null.")
+                .withLocation(availableDiary.getLocation())
+                .buildEmpty();
+
+        // when
+        ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, availableDiary.getVersion());
+
+        // then
+        resultActions.andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.message", containsString("Name must not be empty."))
+        );
+
+    }
+
+    @Test
     void givenExistingDiaryIdWithoutIfMatchHeader_whenRequestedWithPatch_thenThrowPreConditionRequiredException() throws Exception {
         // given
         DiaryId availableDiaryId = addNewDiaryToTheSystem();
         Diary availableDiary = diaryRepository.findById(availableDiaryId).get();
         // and
-        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.builder()
-                .text("Update my loaded diary where version is null.")
-                .name(availableDiary.getName())
-                .location(availableDiary.getLocation())
-                .build();
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.aDefaultPatchDiaryDto()
+                .withText("Update my loaded diary where version is null.")
+                .withName(availableDiary.getName())
+                .withLocation(availableDiary.getLocation())
+                .buildEmpty();
 
         // when
         ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, null);
@@ -82,11 +150,11 @@ class DiaryApiTest {
         diaryWasModifiedInTheMeanTime(availableDiary);
 
         // and
-        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.builder()
-                .text("Update my loaded diary where version is " + eTag)
-                .name(availableDiary.getName())
-                .location(availableDiary.getLocation())
-                .build();
+        PatchDiaryDto patchDiaryDtoOnLoadedDiary = PatchDiaryDtoTestDataBuilder.aDefaultPatchDiaryDto()
+                .withText("Update my loaded diary where version is " + eTag)
+                .withName(availableDiary.getName())
+                .withLocation(availableDiary.getLocation())
+                .buildEmpty();
 
         // when
         ResultActions resultActions = sendPatchDiaryCommandFor(availableDiaryId, patchDiaryDtoOnLoadedDiary, availableDiary.getVersion());
@@ -120,13 +188,31 @@ class DiaryApiTest {
     }
 
     @Test
+    public void givenCreateDiaryDtoWithNullNamePayload_whenRequestedWithPost_thenThrowException() throws Exception {
+        //given
+        CreateDiaryDto createDiaryDto = CreateDiaryDtoTestDataBuilder.anEmptyCreateDiaryDto()
+                .withText("ilker")
+                .withLocation("istanbul")
+                .buildEmpty();
+
+        //when
+        ResultActions resultActions = sendPostDiaryCommandFor(createDiaryDto);
+
+        //then
+        resultActions.andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.message", containsString("Name must not be empty."))
+        );
+    }
+
+    @Test
     public void givenDefaultCreateDiaryDtoPayload_whenRequestedWithPost_thenCreateNewDiarySuccessfully() throws Exception {
         //given
-        CreateDiaryDto createDiaryDto = CreateDiaryDtoTestDataBuilder.builder()
-                .name("Jhony Cash")
-                .text("I wrote a song today")
-                .location("Kentucky")
-                .build();
+        CreateDiaryDto createDiaryDto = CreateDiaryDtoTestDataBuilder.aDefaultCreateDiaryDto()
+                .withName("Jhony Cash")
+                .withText("I wrote a song today")
+                .withLocation("Kentucky")
+                .buildDefault();
 
         //when
         ResultActions resultActions = sendPostDiaryCommandFor(createDiaryDto);
@@ -198,7 +284,7 @@ class DiaryApiTest {
 
 
     private DiaryId addNewDiaryToTheSystem(){
-        Diary diary = new DiaryTestBuilder()
+        Diary diary = new DiaryTestDataBuilder()
                 .name("ilker Kanatlı")
                 .id(DiaryId.randomUUID())
                 .location("İstanbul")

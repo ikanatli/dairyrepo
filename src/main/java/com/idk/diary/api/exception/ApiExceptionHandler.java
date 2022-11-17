@@ -22,6 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice(assignableTypes = {DiaryController.class})
 public class ApiExceptionHandler {
 
+    private static final String GIVEN_ARGUMENT_NOT_VALID_REASON_MESSAGE =
+            "Given parameter is not valid. Plz check the API swagger then make the request with suitable payload. ";
+
+
     @ExceptionHandler(PreConditionHeaderRequired.class)
     @ResponseStatus(value = HttpStatus.PRECONDITION_REQUIRED)
     ErrorDto handleException(PreConditionHeaderRequired exception, HttpServletRequest request) {
@@ -139,7 +143,7 @@ public class ApiExceptionHandler {
                 code(HttpStatus.BAD_REQUEST.value()).
                 title(HttpStatus.BAD_REQUEST.name()).
                 referenceError(request.getRequestURI()).
-                reason(exception.toString()).
+                reason(GIVEN_ARGUMENT_NOT_VALID_REASON_MESSAGE + exception.getMessage()).
                 message(exception.getMessage()).
                 build();
     }

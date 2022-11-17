@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -55,7 +56,7 @@ public class DiaryController implements DiaryApi {
 
     // TODO: add uriComponentsBuilder
     @Override
-    public ResponseEntity<?> create(CreateDiaryDto createDiaryDto, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> create(@Valid CreateDiaryDto createDiaryDto, UriComponentsBuilder uriComponentsBuilder) {
         log.info("DiaryController -> Create diary started for {}", createDiaryDto.name());
 
         Diary diary = createDiaryCommand.execute(
@@ -93,7 +94,7 @@ public class DiaryController implements DiaryApi {
 
 
     @Override
-    public ResponseEntity<Diary> patch(UUID id, PatchDiaryDto patchDiaryDto, Integer ifMatch) {
+    public ResponseEntity<Diary> patch(UUID id, @Valid PatchDiaryDto patchDiaryDto, Integer ifMatch) {
         log.info("DiaryController -> Patch diary started for name {} and id {}", patchDiaryDto.name(), id);
         Diary retrievedDiary = retrieveDiaryQuery.execute(DiaryId.from(id));
         if(ifMatch == null){
