@@ -1,6 +1,6 @@
 package com.idk.diary.domain.model;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
@@ -10,9 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import java.time.Instant;
 
-@ApiModel(
-        description = "Main domain entity"
-)
+@Schema(description = "Main domain entity")
 @Entity
 @Table(name = "diaries")
 @Builder

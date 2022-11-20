@@ -22,3 +22,19 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+
+springdoc:
+  api-docs:
+    path: /diaryApiDocs # Custom spring actuator path http://localhost:8080/diaryApiDocs
+  swagger-ui:
+    path: /diarySwagger/index.html  # http://localhost:8080/diarySwagger/swagger-ui/index.html
+    operations-sorter: method
+    enabled: true
+  show-actuator: true # To display actuator end points.
+
+management:
+  endpoints:
+    web:
+      base-path: /diaryActuator
+      exposure:
+        include: health,metrics,beans,env,info,trace,flyway,logfile,prometheus,scheduledtasks,sessions,auditevents,conditions,configprops
