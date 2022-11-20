@@ -5,7 +5,12 @@ import com.idk.diary.api.dto.ErrorDto;
 import com.idk.diary.api.dto.GetDiaryDto;
 import com.idk.diary.api.dto.PatchDiaryDto;
 import com.idk.diary.domain.model.Diary;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +21,32 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-@Api(tags = "diary")
+@Tag(name = "diary")
 public interface DiaryApi {
 
-    @ApiOperation(
-            value = "Creates a Diary",
-            nickname = "createDiary",
-            notes = "This operation creates a Diary",
-            response = Diary.class,
-            tags = {"diary"}
+    @Operation(
+            summary = "Creates a Diary",
+            operationId = "createDiary",
+            description = "This operation creates a Diary",
+            tags = "diary"
+
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 201, message = "Created", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
+                    @ApiResponse(responseCode = "201", description = "Created",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Diary.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "405", description = "Method Not allowed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Conflict",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class)))
             }
     )
     @PostMapping(path = "/diary",
@@ -42,7 +54,6 @@ public interface DiaryApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<?> create(
-            @ApiParam(value = "The Diary to be created", required = true)
             @RequestBody
             @Valid
                     CreateDiaryDto createDiaryDto,
@@ -50,51 +61,63 @@ public interface DiaryApi {
     );
 
 
-    @ApiOperation(
-            value = "Deletes a Diary",
-            nickname = "deleteDiary",
-            notes = "This operation deletes a Diary",
-            tags = {"diary"}
+
+    @Operation(
+            summary = "Deletes a Diary",
+            operationId = "deleteDiary",
+            description = "This operation deletes a Diary",
+            tags = "diary"
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
+                    @ApiResponse(responseCode = "204", description = "No Content"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "405", description = "Method Not allowed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class)))
             }
     )
     @DeleteMapping(path = "/diary/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<Void> delete(
-            @ApiParam(value = "Identifier of the Diary", required = true)
             @PathVariable("id")
                     UUID id
     );
 
 
-    @ApiOperation(
-            value = "Retrieve the List of Diaries",
-            nickname = "listDiary",
-            notes = "This operation returns List of Diaries",
-            response = Diary.class,
-            responseContainer = "List",
-            tags = {"diary"}
+    @Operation(
+            summary = "Retrieve the List of Diaries",
+            operationId = "listDiary",
+            description = "This operation returns List of Diaries",
+            tags = "diary"
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetDiaryDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "405", description = "Method Not allowed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Conflict",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class)))
             }
     )
     @GetMapping(path = "/diary",
@@ -103,52 +126,74 @@ public interface DiaryApi {
     ResponseEntity<List<Diary>> retrieve();
 
 
-    @ApiOperation(
-            value = "Retrieve the Diary",
-            nickname = "retrieveDiary",
-            notes = "This operation returns a Diary for an id",
-            response = Diary.class,
-            tags = {"diary"}
+    @Operation(
+            summary = "Retrieve a Diary",
+            operationId = "retrieveDiary",
+            description = "This operation returns a Diary for an id",
+            tags = "diary"
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetDiaryDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "405", description = "Method Not allowed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Conflict",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class)))
             }
     )
     @GetMapping(path = "/diary/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<GetDiaryDto> retrieve(
-            @ApiParam(value = "Identifier of the Diary", required = true)
             @PathVariable("id")
                     UUID id
     );
 
 
-    @ApiOperation(
-            value = "Partially Update the Diary",
-            nickname = "patchDiary",
-            notes = "This operation updates a diary partially",
-            response = Diary.class,
-            tags = {"diary"}
+
+
+
+
+
+    @Operation(
+            summary = "Partially Update the Diary",
+            operationId = "patchDiary",
+            description = "This operation updates a diary partially",
+            tags = "diary"
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 200, message = "Success", response = Diary.class),
-                    @ApiResponse(code = 400, message = "Bad Request", response = ErrorDto.class),
-                    @ApiResponse(code = 401, message = "Unauthorized", response = ErrorDto.class),
-                    @ApiResponse(code = 403, message = "Forbidden", response = ErrorDto.class),
-                    @ApiResponse(code = 404, message = "Not Found", response = ErrorDto.class),
-                    @ApiResponse(code = 405, message = "Method Not allowed", response = ErrorDto.class),
-                    @ApiResponse(code = 409, message = "Conflict", response = ErrorDto.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = ErrorDto.class)
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Diary.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "405", description = "Method Not allowed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Conflict",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "412", description = "Precondition Failed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "428", description = "Precondition Required",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorDto.class)))
             }
     )
     @PatchMapping(path = "/diary/{id}",
@@ -156,14 +201,11 @@ public interface DiaryApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<Diary> patch(
-            @ApiParam(value = "Identifier of the Diary", required = true)
             @PathVariable("id")
                     UUID id,
-            @ApiParam(value = "The Diary, to be updated fields included.", required = true)
             @Valid
             @RequestBody
                     PatchDiaryDto patchDiaryDto,
-            @ApiParam(value = "The Existing Diary record version.", required = true)
             @RequestHeader(name = HttpHeaders.IF_MATCH, required = false)
                     Integer ifMatch
     );

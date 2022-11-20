@@ -3,14 +3,12 @@ package com.idk.diary.api.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-
-@ApiModel(
-        description = "Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)"
-)
+@Schema(description = "Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)")
 @Data
 @JsonInclude(Include.NON_NULL)
 @Builder

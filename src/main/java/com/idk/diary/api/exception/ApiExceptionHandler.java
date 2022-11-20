@@ -3,6 +3,7 @@ package com.idk.diary.api.exception;
 import com.idk.diary.api.controller.DiaryController;
 import com.idk.diary.api.dto.ErrorDto;
 import com.idk.diary.domain.exception.*;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * will only work for DiaryController.
  */
 
+@Hidden
 @RestControllerAdvice(assignableTypes = {DiaryController.class})
 public class ApiExceptionHandler {
 
